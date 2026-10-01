@@ -1,0 +1,5 @@
+{% extends 'station/base.html' %}{% block content %}<h1>Дизель-генераторы</h1>
+<table><tr><th>Генератор</th><th class="num">Наработка, м/ч</th><th class="num">С последнего ТО</th><th>ТО</th><th></th></tr>
+{% for g in items %}<tr><td>{{ g.name }}</td><td class="num">{{ g.motohours }}</td><td class="num">{{ g.hours_since_service }}</td>
+<td>{% if g.service_due %}<span class="tag bad">требуется ТО</span>{% else %}<span class="tag ok">через {{ g.hours_to_service }} м/ч</span>{% endif %}</td>
+<td>{% if 'mechanic' in roles or 'manager' in roles %}<a class="btn alt sm" href="{% url 'moto_add' g.pk %}">Моточасы</a> <a class="btn alt sm" href="{% url 'gen_service' g.pk %}">Провести ТО</a>{% endif %}</td></tr>{% endfor %}</table>{% endblock %}

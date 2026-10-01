@@ -1,0 +1,13 @@
+{% extends 'station/base.html' %}{% block content %}<h1>Отчёты руководителя</h1>
+<form method="get" class="f">{{ form.as_p }}<button class="btn">Сформировать</button></form>
+{% if data %}<h2>Выполнено наблюдений: {{ data.observations_total }}</h2>
+<table><tr><th>Вид</th><th class="num">Кол-во</th></tr>{% for r in data.observations %}<tr><td>{{ r.label }}</td><td class="num">{{ r.n }}</td></tr>
+{% empty %}<tr><td colspan="2" class="muted">Нет данных.</td></tr>{% endfor %}</table>
+<h2>Расход топлива и материалов</h2>
+<table><tr><th>Позиция</th><th class="num">Расход</th></tr>{% for r in data.consumption %}<tr><td>{{ r.name }}</td><td class="num">{{ r.total }} {{ r.unit }}</td></tr>
+{% empty %}<tr><td colspan="2" class="muted">Расхода не было.</td></tr>{% endfor %}</table>
+<h2>Нештатные ситуации: {{ data.events_total }}</h2>
+<table>{% for r in data.events %}<tr><td>{{ r.label }}</td><td class="num">{{ r.n }}</td></tr>{% empty %}<tr><td class="muted">Не было.</td></tr>{% endfor %}</table>
+{% if data.staffing %}<h2>Укомплектованность смены</h2>
+<table><tr><th>Специальность</th><th>Нужно</th><th>Есть</th><th></th></tr>{% for r in data.staffing %}<tr><td>{{ r.specialty }}</td><td>{{ r.need }}</td><td>{{ r.have }}</td>
+<td><span class="tag {% if r.ok %}ok{% else %}bad{% endif %}">{% if r.ok %}ок{% else %}не хватает{% endif %}</span></td></tr>{% endfor %}</table>{% endif %}{% endif %}{% endblock %}

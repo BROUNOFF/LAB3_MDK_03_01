@@ -1,0 +1,12 @@
+{% extends 'station/base.html' %}{% block content %}<h1>Сводка станции</h1>
+<p>{% if shift %}Текущая смена: <a href="{% url 'shift_detail' shift.pk %}">{{ shift }}</a> (до {{ shift.end_date|date:"d.m.Y" }}).{% else %}Активной смены нет.{% endif %}
+Измерений сегодня: <b>{{ obs_today }}</b>.</p>
+{% for i in blocked %}<div class="alert">Прибор «{{ i.name }}» заблокирован: калибровка просрочена или не проводилась.</div>{% endfor %}
+{% for g in due_gens %}<div class="alert w">{{ g.name }}: пора на плановое ТО (наработка с последнего ТО {{ g.hours_since_service }} м/ч).</div>{% endfor %}
+{% for s in low_stock %}<div class="alert w">Ниже нормы: {{ s.name }} — {{ s.quantity }} {{ s.unit }} (норма {{ s.min_quantity }}).</div>{% endfor %}
+{% if pending %}<div class="alert w">Заявок на утверждении: {{ pending }}. <a href="{% url 'requests' %}">Открыть</a></div>{% endif %}
+{% if not blocked and not due_gens and not low_stock and not pending %}<p class="muted">Предупреждений нет.</p>{% endif %}
+<h2>Последние нештатные ситуации</h2>
+<table><tr><th>Время</th><th>Характер</th><th>Меры</th></tr>
+{% for e in events %}<tr><td>{{ e.occurred_at|date:"d.m.Y H:i" }}</td><td>{{ e.get_kind_display }}</td><td>{{ e.measures_taken }}</td></tr>
+{% empty %}<tr><td colspan="3" class="muted">Записей нет.</td></tr>{% endfor %}</table>{% endblock %}

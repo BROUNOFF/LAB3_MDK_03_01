@@ -1,0 +1,6 @@
+{% load static %}<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Вход — ИСУПС</title><link rel="stylesheet" href="{% static 'station/style.css' %}"></head>
+<body style="display:block"><main class="login"><h1>Вход в ИСУПС</h1>
+<form method="post" class="f">{% csrf_token %}{{ form.as_p }}
+{% if form.errors %}<p class="errorlist">Неверный логин или пароль.</p>{% endif %}
+<button class="btn">Войти</button></form></main></body></html>

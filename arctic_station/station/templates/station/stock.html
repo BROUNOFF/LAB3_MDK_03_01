@@ -1,0 +1,5 @@
+{% extends 'station/base.html' %}{% block content %}<h1>Склад</h1>
+{% if 'manager' in roles or 'mechanic' in roles or 'doctor' in roles %}<p><a class="btn" href="{% url 'stock_move' %}">Расход / приход</a></p>{% endif %}
+<table><tr><th>Позиция</th><th>Категория</th><th class="num">Остаток</th><th class="num">Норма</th><th></th></tr>
+{% for s in items %}<tr><td>{{ s.name }}</td><td>{{ s.get_category_display }}</td><td class="num">{{ s.quantity }} {{ s.unit }}</td>
+<td class="num">{{ s.min_quantity }} {{ s.unit }}</td><td>{% if s.below_norm %}<span class="tag bad">ниже нормы</span>{% else %}<span class="tag ok">в норме</span>{% endif %}</td></tr>{% endfor %}</table>{% endblock %}

@@ -1,0 +1,14 @@
+{% load static %}<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}ИСУПС{% endblock %} — Полярная станция</title>
+<link rel="stylesheet" href="{% static 'station/style.css' %}"></head><body>
+<nav><div class="brand">ИСУПС</div>
+<div class="who">{{ user.get_full_name|default:user.username }}</div>
+<a href="{% url 'dashboard' %}">Сводка</a><a href="{% url 'shifts' %}">Смены</a>
+<a href="{% url 'observations' %}">Наблюдения</a><a href="{% url 'events' %}">Нештатные ситуации</a>
+<a href="{% url 'instruments' %}">Приборы</a><a href="{% url 'generators' %}">Дизель-генераторы</a>
+<a href="{% url 'stock' %}">Склад</a><a href="{% url 'requests' %}">Заявки</a>
+{% if 'manager' in roles %}<a href="{% url 'reports' %}">Отчёты</a>{% endif %}
+<form method="post" action="{% url 'logout' %}">{% csrf_token %}<button>Выйти</button></form></nav>
+<main>{% for m in messages %}<div class="msg {{ m.tags }}" role="status">{{ m }}</div>{% endfor %}
+{% block content %}{% endblock %}</main></body></html>
