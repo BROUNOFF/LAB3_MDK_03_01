@@ -1,0 +1,11 @@
+{% extends 'station/base.html' %}{% block content %}<h1>Заявки на снабжение</h1>
+<table><tr><th>№</th><th>Позиция</th><th class="num">Количество</th><th>Статус</th><th>Создана</th><th></th></tr>
+{% for r in items %}<tr><td>{{ r.pk }}</td><td>{{ r.item.name }}</td><td class="num">{{ r.quantity }} {{ r.item.unit }}</td>
+<td><span class="tag {% if r.status == 'pending' %}warn{% elif r.status == 'rejected' %}bad{% else %}ok{% endif %}">{{ r.get_status_display }}</span></td>
+<td>{{ r.created_at|date:"d.m.Y H:i" }}</td><td>
+{% if r.status == 'pending' and 'manager' in roles %}
+<form method="post" action="{% url 'request_decide' r.pk 'approve' %}" style="display:inline">{% csrf_token %}<button class="btn sm">Утвердить</button></form>
+<form method="post" action="{% url 'request_decide' r.pk 'reject' %}" style="display:inline">{% csrf_token %}<button class="btn alt sm">Отклонить</button></form>
+{% elif r.status == 'approved' %}
+<form method="post" action="{% url 'request_receive' r.pk %}">{% csrf_token %}<button class="btn alt sm">Принять поставку</button></form>{% endif %}</td></tr>
+{% empty %}<tr><td colspan="6" class="muted">Заявок нет.</td></tr>{% endfor %}</table>{% endblock %}

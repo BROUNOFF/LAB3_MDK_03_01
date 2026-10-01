@@ -1,0 +1,6 @@
+{% extends 'station/base.html' %}{% block content %}<h1>Смены</h1>
+{% if 'manager' in roles %}<p><a class="btn" href="{% url 'shift_create' %}">Создать смену</a></p>{% endif %}
+<table><tr><th>Смена</th><th>Период</th><th></th></tr>
+{% for s in shifts %}<tr><td><a href="{% url 'shift_detail' s.pk %}">{{ s.name }}</a></td>
+<td>{{ s.start_date|date:"d.m.Y" }} – {{ s.end_date|date:"d.m.Y" }}</td><td>{% if s.is_active %}<span class="tag ok">на дежурстве</span>{% endif %}</td></tr>
+{% empty %}<tr><td colspan="3" class="muted">Смен пока нет.</td></tr>{% endfor %}</table>{% endblock %}

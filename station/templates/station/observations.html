@@ -1,0 +1,10 @@
+{% extends 'station/base.html' %}{% block content %}<h1>Наблюдения</h1>
+<form class="row" method="get"><label>Вид<select name="type"><option value="">Все</option>
+{% for k,l in types %}<option value="{{ k }}" {% if k == sel %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></label>
+<label>С<input type="date" name="from" value="{{ dfrom }}"></label><label>По<input type="date" name="to" value="{{ dto }}"></label>
+<button class="btn alt">Показать</button>
+{% if 'specialist' in roles or 'manager' in roles %}<a class="btn" href="{% url 'observation_add' %}">Новое измерение</a>{% endif %}</form>
+<table><tr><th>Время</th><th>Вид</th><th class="num">Значение</th><th>Прибор</th><th>Оператор</th></tr>
+{% for o in items %}<tr><td>{{ o.observed_at|date:"d.m.Y H:i" }}</td><td>{{ o.get_obs_type_display }}</td>
+<td class="num">{{ o.value }} {{ o.unit }}</td><td>{{ o.instrument.name }}</td><td>{{ o.operator.get_full_name|default:o.operator.username }}</td></tr>
+{% empty %}<tr><td colspan="5" class="muted">Измерений по фильтру нет.</td></tr>{% endfor %}</table>{% endblock %}

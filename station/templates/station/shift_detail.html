@@ -1,0 +1,16 @@
+{% extends 'station/base.html' %}{% block content %}<h1>{{ shift.name }}</h1>
+<p>{{ shift.start_date|date:"d.m.Y" }} – {{ shift.end_date|date:"d.m.Y" }}</p>
+<h2>Укомплектованность</h2>
+<table><tr><th>Специальность</th><th>Нужно</th><th>Есть</th><th></th></tr>
+{% for r in staffing %}<tr><td>{{ r.specialty }}</td><td>{{ r.need }}</td><td>{{ r.have }}</td>
+<td><span class="tag {% if r.ok %}ok{% else %}bad{% endif %}">{% if r.ok %}укомплектовано{% else %}не хватает{% endif %}</span></td></tr>{% endfor %}</table>
+<h2>Состав</h2>{% if 'manager' in roles %}<p><a class="btn" href="{% url 'member_add' shift.pk %}">Зачислить сотрудника</a></p>{% endif %}
+<table><tr><th>Сотрудник</th><th>Квалификация</th><th>Прибыл</th><th>Здоровье</th><th></th></tr>
+{% for m in members %}<tr><td>{{ m.employee }}</td><td>{{ m.get_qualification_display }}</td><td>{{ m.arrival_date|date:"d.m.Y" }}</td>
+<td><span class="tag {% if m.health == 'good' %}ok{% elif m.health == 'unfit' %}bad{% else %}warn{% endif %}">{{ m.get_health_display }}</span> {{ m.health_note }}</td>
+<td>{% if 'manager' in roles or 'doctor' in roles %}<a class="btn alt sm" href="{% url 'member_health' m.pk %}">Изменить</a>{% endif %}</td></tr>
+{% empty %}<tr><td colspan="5" class="muted">Никто не зачислен.</td></tr>{% endfor %}</table>
+<h2>График дежурств</h2>{% if 'manager' in roles %}<p><a class="btn" href="{% url 'duty_add' shift.pk %}">Назначить дежурство</a></p>{% endif %}
+<table><tr><th>Дата</th><th>Время суток</th><th>Дежурный</th></tr>
+{% for d in duties %}<tr><td>{{ d.date|date:"d.m.Y" }}</td><td>{{ d.get_part_display }}</td><td>{{ d.employee.full_name }}</td></tr>
+{% empty %}<tr><td colspan="3" class="muted">Дежурства не назначены.</td></tr>{% endfor %}</table>{% endblock %}
